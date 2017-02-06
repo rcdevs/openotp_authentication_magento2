@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+		<!-- /Magento/Backend/view/adminhtml/layout/adminhtml_auth_login.xml
+		Action works too but copy login.phtml in openotp/login.phtml - not the best choice
+		<referenceBlock name="admin.login">
+		    <action method="setTemplate">
+		     	<argument name="template" xsi:type="string">RCDevs_OpenOTP::admin/login.phtml</argument>
+		   </action>
+		</referenceBlock>
+		-->
+        <referenceContainer name="login.content">
+            <block class="RCDevs\OpenOTP\Block\Adminhtml\Adminlogin" name="openotp.admin.login" template="RCDevs_OpenOTP::admin/login.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,30 @@
+<?php
+/**
+ * OpenOTP Authentication Magento 2 module
+ *
+ * LICENSE
+ *
+ * Copyright © 2017
+ * RCDevs OpenOTP. All rights reserved.
+ *
+ * The use and redistribution of this software, either compiled or uncompiled, with or without modifications are permitted provided that the following conditions are met:
+ * *
+ * @copyright Copyright (c) 2017 RCDevs (http://www.rcdevs.com)
+ * @author rcdevs <info@rcdevs.com>
+ * @category RCDevs
+ * @package RCDevs_OpenOTP
+*/
+// @codingStandardsIgnoreFile
+
+$ChallengeOverlay = $block->getFrontendScript();
+if($ChallengeOverlay){
+?>
+<script type="text/javascript">
+window.onload = function() {
+	var token= "<?php echo $block->getFormKey(); ?>";
+	var path= "<?php echo $block->getViewFileUrl('RCDevs_OpenOTP::images'); ?>"+"/";
+	<?php echo $ChallengeOverlay; ?>
+};
+</script>
+<?php } ?>
+

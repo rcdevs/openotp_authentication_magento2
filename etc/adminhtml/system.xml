@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+	<!-- /** * @author RCDevs team * @copyright Copyright (c) 2017 RCDevs (http://www.rcdevs.com) * @package rcdevs_openotp */ -->
+	<system>
+		<tab id="OpenOTP" translate="label" sortOrder="10">
+			<label>OpenOTP</label>
+		</tab>
+	    <section id="rcdevs_openotp" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+		    <label>OpenOTP Two-Factor Authentication</label>
+			<tab>OpenOTP</tab>
+			<resource>RCDevs_OpenOTP::config</resource>
+	        <group id="main" type="text" sortOrder="500" showInDefault="1" showInWebsite="0" showInStore="0" translate="label">
+	            <label>OpenOTP Configuration</label>
+	            <field id="enabled"  translate="label comment" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Enable OpenOTP</label>
+	                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+	                <comment>A per user setting override general configuration in System / Permissions / Users </comment>
+	            </field>
+	            <field id="server_url" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Server URL</label>
+	                <comment>You can find your server URL in your OpenOTP server configuration (part of WebAdm) / Applications, under Web services section: Service URL (STD): http://Myserver:8080/openotp/</comment>
+	            </field>
+	            <field id="client_id" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Client ID</label>
+	            </field>
+	            <field id="create_account"  translate="label comment" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Create local account</label>
+	                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+	                <comment>On login for the first time, Magento user account will be created (if not exists) with OpenOTP username and password</comment>
+	            </field>
+	            <field id="default_domain"  translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Default domain</label>
+	            </field>
+	            <field id="client_settings"  translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Client settings</label>
+	                <validate>validate-int</validate>
+	            </field>
+	            <field id="proxy_host" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Proxy host</label>
+	            </field>
+	            <field id="proxy_port" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Proxy port</label>
+	            </field>
+	            <field id="proxy_login" translate="label" type="text" sortOrder="9" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Proxy login</label>
+	            </field>
+	            <field id="proxy_password" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Proxy password</label>
+	            </field>
+	            <field id="log_enabled"  translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+	                <label>Enable log</label>
+	                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+	            </field>
+	        </group>
+	    </section>
+	</system>
+</config>

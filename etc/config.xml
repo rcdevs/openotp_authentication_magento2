@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <rcdevs_openotp>
+            <main>
+                <server_url>http://myserver:8080/openotp/</server_url>
+                <client_id>Magento</client_id>
+            </main>
+        </rcdevs_openotp>
+    </default>
+</config>
