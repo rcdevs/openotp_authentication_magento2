@@ -83,7 +83,7 @@ After that, if your website is in the production mode, please run the command:
 
 Go to System / Configuration / Advanced section / Admin, find OpenOTP tab.
 
-## Edit the Server URL field and change the openotp_server_url with your OpenOTP server URL. 
+#### Edit the Server URL field and change the openotp_server_url with your OpenOTP server URL. 
 Note: You can get your server URL in WebADM, under the Application menu.  
 
 Enable Plugin affect **all users** authentication method to strong two factors login method,
