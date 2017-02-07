@@ -1,0 +1,28 @@
+2.0.0 
+	- Plugin is now compatible with Magento2
+	- Added Contextual authentication 
+	  Change the LoginMode to LDAP-only for requests coming 
+	  from trusted devices on trusted IPs.
+	- Added support to OpenOTP Software Token with Push Notif Authentication
+	  Extend php soapclient to add timeout capabilities  
+	- WebService API is now versioned
+	- U2F javascript scripts updated
+	- OTP Challenge input doesn't show anymore characters in clear text (type=password) 	 
+1.2.2
+	- Fixed SSL issue with PHP 5.6+
+	- Enhanced FIDO U2F Library calls
+1.2.1
+ 	 - Added support for OpenOTP v1.2.1
+1.2.0
+ 	 - Added support for OpenOTP v1.2 and FIDO U2F authentication. 
+1.1.0
+	 - The plugin displays an overlay on Challenge-Response session
+	 - Custom login form template (login.phtml)
+	 - Global and per user settings configuration
+	 - Mode auto-create local account on first login
+     - The plugin will transparently support any OpenOTP Login Mode including:
+       > LDAP only
+       > OTP only
+       > LDAP+OTP with user challenge-response
+     - Possibility to enable plugin logs (/var/logs/openotp.log)
+

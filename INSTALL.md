@@ -1,36 +1,4 @@
-# RCDevs OpenOTP Authentication Extension on Magento 2.0
-RCDevs OpenOTP Plugin for Magento version 1.0.0
-Copyright (c) 2010-2017 RCDevs SA, All rights reserved.
-
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
----
-
-Welcome to RCDevs OpenOTP Authentication on Magento 2.0 Installation! We're glad that you are interested in our extension.
-
-<p>OpenOTP 2FA Authentication Plugin enables strong two-factor authentication for administrators to login on Magento Dashboard.  
-It displays an overlay on Challenge-Response session, after fill in 
-username and password. The plugin supports global and per user settings configuration. 
-The plugin will transparently handle any OpenOTP Login Mode including:
-<ul class="short-features">
-<li>LDAP only</li>
-<li>OTP only</li>
-<li>LDAP+OTP</li>
-<li>LDAP+U2F</li>
-<li>LDAP+(OTP or U2F)</li>
-</ul>
-
-If configured, OpenOTP plugin is able to auto-create new account in Magento while login for the first time.</p>
-
-<p><span style="color: #000000;"><strong>You need to install (if not already done) our openOTP Authentication Server </strong></span></p>
-<span><a href="http://www.rcdevs.com/downloads/Software+Packages/" target="blank"> Stand Alone Packages </a></span>
-<br><span><a href="http://www.rcdevs.com/downloads/VMWare+Appliances/" target="blank"> Appliances (to be configured before Prods!) </a></span></br>
-
-
+# To install and configure the OpenOTP plugin, proceed as follows:
 
 To ensure that cache will not cause any problem, you'd better turn it off. This can be done from the admin console by navigating to the Cache Management page (System->Cache Management), 
 selecting all caches, clicking "disable" from the drop-down menu, and submitting the change.
@@ -83,8 +51,9 @@ After that, if your website is in the production mode, please run the command:
 
 Go to System / Configuration / Advanced section / Admin, find OpenOTP tab.
 
-## Edit the Server URL field and change the openotp_server_url with your OpenOTP server URL. 
-Note: You can get your server URL in WebADM, under the Application menu.  
+!!!!!!!!!!!!!!!!!!!		Edit the Server URL field and change the openotp_server_url 
+!!    IMPORTANT  !!		with your OpenOTP server URL. 
+!!!!!!!!!!!!!!!!!!!		Note: You can get your server URL in WebADM, under the Application menu.  
 
 Enable Plugin affect **all users** authentication method to strong two factors login method,
 a per user setting in System / Permissions / Users allow to disable OpenOTP authentication,
@@ -92,4 +61,3 @@ or conversely disable Global plugin configuration and enable it only for particu
 /!\ Be sure to disable OpenOTP for one admin user during configuration. If you encounter this kind
 of problem, it's still possible to disable OpenOTP for a particular admin user in the Database.
 Go to admin_user table and edit openotp_enabled field, "1" is for enabled, "2" for disabled.
-
