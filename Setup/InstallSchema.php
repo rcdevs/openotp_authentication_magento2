@@ -27,16 +27,16 @@ class InstallSchema implements InstallSchemaInterface
     {
         $setup->startSetup();
         $tableName = $setup->getTable('admin_user');
-	   
+       
         if ($setup->getConnection()->isTableExists($tableName) == true) {
-        	$connection = $setup->getConnection();
-			$connection->addColumn(
-				$tableName,
-			    'openotp_enable',
-			    \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-			    ['type' => Table::TYPE_TEXT,'length' => 30,'nullable' => false, 'default' => null, 'afters' => 'password', 'comment' => 'Enable OpenOTP User']
-			);
-      	 }	   			 
+            $connection = $setup->getConnection();
+            $connection->addColumn(
+                $tableName,
+                'openotp_enable',
+                \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                ['type' => Table::TYPE_TEXT,'length' => 30,'nullable' => false, 'default' => null, 'afters' => 'password', 'comment' => 'Enable OpenOTP User']
+            );
+        }
         $setup->endSetup();
-	}
+    }
 }

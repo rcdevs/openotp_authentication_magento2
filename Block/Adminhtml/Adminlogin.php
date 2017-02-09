@@ -30,35 +30,33 @@ class Adminlogin extends \Magento\Backend\Block\Template
      * @var \Psr\Log\LoggerInterface
      */
     protected $logger;
-	
-	
+    
+    
     public function __construct(
-		\Magento\Backend\Block\Template\Context $context,
-		\Magento\Backend\Model\Auth\Session $openOTPSession,
+        \Magento\Backend\Block\Template\Context $context,
+        \Magento\Backend\Model\Auth\Session $openOTPSession,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->logger = $logger;
         $this->openOTPSession = $openOTPSession;
-		//$this->logger->debug("******************* Class Block/Adminlogin Loaded *******************");
+        //$this->logger->debug("******************* Class Block/Adminlogin Loaded *******************");
         parent::__construct($context);
     }
-	
-	public function _prepareLayout()
-	{
-		return parent::_prepareLayout();
-	}
+    
+    public function _prepareLayout()
+    {
+        return parent::_prepareLayout();
+    }
 
-	
+    
     public function getFrontendScript()
     {
-		$js = null;
-	 	if ($this->openOTPSession->getShowOpenOTPChallenge() != NULL)
-		{ 
-			$js = $this->openOTPSession->getOpenotpFrontendScript(); 
-			$this->openOTPSession->setShowOpenOTPChallenge(false); 
-			$this->openOTPSession->setOpenotpFrontendScript(false); 
-		}
+        $js = null;
+        if ($this->openOTPSession->getShowOpenOTPChallenge() != null) {
+            $js = $this->openOTPSession->getOpenotpFrontendScript();
+            $this->openOTPSession->setShowOpenOTPChallenge(false);
+            $this->openOTPSession->setOpenotpFrontendScript(false);
+        }
         return $js;
     }
-	
 }

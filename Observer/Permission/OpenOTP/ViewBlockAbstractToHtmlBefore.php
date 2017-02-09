@@ -21,9 +21,8 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Backend\Block\Widget\Tabs as WidgetTabs;
 
-
 /**
- * Add New Tab in User Permission to enable OpenOTP per User 
+ * Add New Tab in User Permission to enable OpenOTP per User
  */
 class ViewBlockAbstractToHtmlBefore extends WidgetTabs implements ObserverInterface
 {
@@ -39,12 +38,12 @@ class ViewBlockAbstractToHtmlBefore extends WidgetTabs implements ObserverInterf
     public function __construct(
         \Magento\Framework\App\Request\Http $request,
         \Magento\Backend\Model\Auth\Session $backendAuthSession,
-		\Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger
     ) {
-		parent::_construct();
+        parent::_construct();
         $this->request = $request;
         $this->backendAuthSession = $backendAuthSession;
-		$this->_logger = $logger;
+        $this->_logger = $logger;
     }
 
     /**
@@ -52,22 +51,21 @@ class ViewBlockAbstractToHtmlBefore extends WidgetTabs implements ObserverInterf
      */
     public function execute(EventObserver $observer)
     {
-		$block = $observer->getEvent()->getBlock();
-		
-		if($block instanceof \Magento\User\Block\User\Edit\Tabs){
-			$block->addTab(
-				'openotp_section',
-				[
-					'label' => __('OpenOTP setup'),
-					'title' => __('OpenOTP setup'),
-					'after' => __('roles_section'),
-	                'content'   => $block->getLayout()->createBlock('RCDevs\OpenOTP\Block\Adminhtml\Permission\User\Edit\Tab\Openotp')->toHtml(),
-					'active'	=> true
-				]
-			);
-		}
+        $block = $observer->getEvent()->getBlock();
+        
+        if ($block instanceof \Magento\User\Block\User\Edit\Tabs) {
+            $block->addTab(
+                'openotp_section',
+                [
+                    'label' => __('OpenOTP setup'),
+                    'title' => __('OpenOTP setup'),
+                    'after' => __('roles_section'),
+                    'content'   => $block->getLayout()->createBlock('RCDevs\OpenOTP\Block\Adminhtml\Permission\User\Edit\Tab\Openotp')->toHtml(),
+                    'active'    => true
+                ]
+            );
+        }
 
-		return $this;
-
+        return $this;
     }
 }

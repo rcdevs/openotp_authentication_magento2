@@ -37,7 +37,7 @@ class Config extends \Magento\Framework\Model\AbstractModel
      * @var string
      */
     const XML_PATH_OPENOTP_CLIENT_ID = 'rcdevs_openotp/main/client_id';
-	
+    
     /**
      * @var string
      */
@@ -72,7 +72,7 @@ class Config extends \Magento\Framework\Model\AbstractModel
      * @var string
      */
     const XML_PATH_OPENOTP_PROXY_PASSWORD = 'rcdevs_openotp/main/proxy_password';
-	
+    
     /**
      * @var string
      */
@@ -89,7 +89,7 @@ class Config extends \Magento\Framework\Model\AbstractModel
     protected $logger;
 
     public function __construct(
-		\Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -97,8 +97,8 @@ class Config extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-		$this->_objectManager = $objectManager;
-		$this->logger = $this->_objectManager->get('\Psr\Log\LoggerInterface');
+        $this->_objectManager = $objectManager;
+        $this->logger = $this->_objectManager->get('\Psr\Log\LoggerInterface');
         $this->scopeConfig = $scopeConfig;
         parent::__construct(
             $context,
@@ -124,7 +124,7 @@ class Config extends \Magento\Framework\Model\AbstractModel
      */
     public function getServerUrl()
     {
-		return $this->scopeConfig->getValue(self::XML_PATH_OPENOTP_SERVER_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(self::XML_PATH_OPENOTP_SERVER_URL, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     /**
@@ -141,7 +141,7 @@ class Config extends \Magento\Framework\Model\AbstractModel
     public function getCreateAccount()
     {
         return $this->scopeConfig->getValue(self::XML_PATH_OPENOTP_CREATE_ACCOUNT, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1;
-    }	
+    }
 
     /**
      * @return string
@@ -198,6 +198,4 @@ class Config extends \Magento\Framework\Model\AbstractModel
     {
         return $this->scopeConfig->getValue(self::XML_PATH_OPENOTP_LOG_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 1;
     }
-	
-
 }

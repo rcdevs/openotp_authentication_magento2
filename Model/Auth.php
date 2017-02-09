@@ -412,12 +412,12 @@ class Auth extends \Magento\Backend\Model\Auth
 							$this->_log("[OpenOTP Module] User " .$this->_username. " successfully authenticate to Magento2 Admin Portal");
 							$this->_log("[OpenOTP Module] URL to Redirect: " . $redirectURL);
 					        header('Location:  '.$redirectURL);						
-							exit;
+							return;
 						}
 						
-					} catch (Exception $e) {
+					} catch (\Exception $e) {
 							$this->error($e->getMessage());
-							exit;
+							return false;
 					}
 					break;
 				 case 2:
@@ -437,7 +437,7 @@ class Auth extends \Magento\Backend\Model\Auth
 					break;
 			}
 			
-        }catch (Mage_Core_Exception $e) {
+        }catch (\Exception $e) {
             $this->_eventManager->dispatch('admin_session_user_login_failed',
 				array('user_name' => $username, 'exception' => $e));
             if ($request && !$request->getParam('messageSent')) {

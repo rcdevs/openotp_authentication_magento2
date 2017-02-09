@@ -22,6 +22,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\Data\FormFactory;
 use Psr\Log\LoggerInterface;
+
 /**
  * Additional tab for user permission configurartion
  */
@@ -38,7 +39,7 @@ class Openotp extends Generic
     protected $formFactory;
 
     public function __construct(
-		LoggerInterface $logger,
+        LoggerInterface $logger,
         Context $context,
         Registry $registry,
         FormFactory $formFactory,
@@ -46,11 +47,11 @@ class Openotp extends Generic
     ) {
         $this->formFactory = $formFactory;
         $this->registry = $registry;
-		$this->logger = $logger;
+        $this->logger = $logger;
         parent::__construct(
             $context,
-			$registry,
-			$formFactory,
+            $registry,
+            $formFactory,
             $data
         );
     }
@@ -63,21 +64,21 @@ class Openotp extends Generic
         $model = $this->registry->registry('permissions_user');
 
         $form = $this->formFactory->create(
-		 	['data' => ['id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post']]
-		);
+            ['data' => ['id' => 'edit_form', 'action' => $this->getData('action'), 'method' => 'post']]
+        );
         $form->setHtmlIdPrefix('user_');
 
-        $fieldset = $form->addFieldset('openotp_fieldset', array('legend' => __('Enable OpenOTP Two factors authentication for login')));		
-		$fieldset->addField('openotp', 'select', array(
-			  'label'       => __('Enable OpenOTP'),
-			  'name'      => 'openotp_enabled',
-			  'value'  => $model->getOpenotp_enabled(),
-			  'values' => array('-1'=>__('Default...'),'1' => 'Yes','2' => 'No'),
-			  'disabled' => false,
-			  'after_element_html' => '<div style="background-position:8px 11px; padding:5px 0 5px 36px; margin-top: 3px;" class="notification-global notification-global-notice">Override [Enable OpenOTP] Plugin setting in System / Configuration</div>',			  
-			));
-		
-		$this->setForm($form);
+        $fieldset = $form->addFieldset('openotp_fieldset', ['legend' => __('Enable OpenOTP Two factors authentication for login')]);
+        $fieldset->addField('openotp', 'select', [
+              'label'       => __('Enable OpenOTP'),
+              'name'      => 'openotp_enabled',
+              'value'  => $model->getOpenotp_enabled(),
+              'values' => ['-1'=>__('Default...'),'1' => 'Yes','2' => 'No'],
+              'disabled' => false,
+              'after_element_html' => '<div style="background-position:8px 11px; padding:5px 0 5px 36px; margin-top: 3px;" class="notification-global notification-global-notice">Override [Enable OpenOTP] Plugin setting in System / Configuration</div>',
+            ]);
+        
+        $this->setForm($form);
 
         return parent::_prepareForm();
     }
