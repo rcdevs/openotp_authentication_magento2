@@ -1,5 +1,4 @@
-# RCDevs OpenOTP Authentication Extension on Magento 2.0
-RCDevs OpenOTP Plugin for Magento version 1.0.0
+# RCDevs OpenOTP Authentication Extension on Magento 2
 Copyright (c) 2010-2017 RCDevs SA, All rights reserved.
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.

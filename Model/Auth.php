@@ -276,175 +276,165 @@ class Auth extends \Magento\Backend\Model\Auth
 			$this->_state = $request->getPost('openotp_state');			
 		}
 		
-        try {
-			$this->load_Parameters($config);			
-	
-			$t_domain = $this->openotpAuth->getDomain($this->_username);
-			if (is_array($t_domain)){
-				$this->_username = $t_domain['username'];
-				$this->_domain = $t_domain['domain'];
-			}elseif($request->getPost('openotp_domain')!= NULL) $this->_domain = $request->getPost('openotp_domain');
-			else $this->_domain = $t_domain;
+		$this->load_Parameters($config);			
 
-			//User exists in Magento ?
-		    //  @var \Magento\User\Model\User $user
-		    $user = $this->_objectManager->get('Magento\User\Model\User')->loadByUsername($this->_username);
-			
-			if($user->getId()){
-				$this->_userMagentoExist = true;
-				$this->_log('[OpenOTP Module] User '.$this->_username.' exists in Magento');
-				$userEnabled = $user->getOpenotp_enabled();
-			}else $this->_log('[OpenOTP Module] User '.$this->_username.' does not exists in Magento');
-			
-			if($userEnabled == 1)
-				$this->_log('[OpenOTP Module] User '.$this->_username.' has OpenOTP enabled setting to Yes');
-			elseif($userEnabled == 2)
-				$this->_log('[OpenOTP Module] User '.$this->_username.' has OpenOTP enabled setting to No');
-			else $this->_log('[OpenOTP Module] User '.$this->_username.' has OpenOTP enabled setting to Default');
-			
-			
-			// User enabled?
-			$session->setIsUserEnabled($userEnabled);		
+		$t_domain = $this->openotpAuth->getDomain($this->_username);
+		if (is_array($t_domain)){
+			$this->_username = $t_domain['username'];
+			$this->_domain = $t_domain['domain'];
+		}elseif($request->getPost('openotp_domain')!= NULL) $this->_domain = $request->getPost('openotp_domain');
+		else $this->_domain = $t_domain;
 
-			//If deactivated do normal Auth
-			if ( ( ( !$config->isEnabled() && $userEnabled != 1 ) || ( $config->isEnabled() && $userEnabled == 2 ) || $this->_disableOpenOTP )  && $this->_userMagentoExist ){
-				$this->_log('User '.$this->_username.' tries login with Magento methods');
-				return parent::login($this->_username, $this->_password, $request);
-			}
+		//User exists in Magento ?
+	    //  @var \Magento\User\Model\User $user
+	    $user = $this->_objectManager->get('Magento\User\Model\User')->loadByUsername($this->_username);
+		
+		if($user->getId()){
+			$this->_userMagentoExist = true;
+			$this->_log('[OpenOTP Module] User '.$this->_username.' exists in Magento');
+			$userEnabled = $user->getOpenotp_enabled();
+		}else $this->_log('[OpenOTP Module] User '.$this->_username.' does not exists in Magento');
+		
+		if($userEnabled == 1)
+			$this->_log('[OpenOTP Module] User '.$this->_username.' has OpenOTP enabled setting to Yes');
+		elseif($userEnabled == 2)
+			$this->_log('[OpenOTP Module] User '.$this->_username.' has OpenOTP enabled setting to No');
+		else $this->_log('[OpenOTP Module] User '.$this->_username.' has OpenOTP enabled setting to Default');
+		
+		
+		// User enabled?
+		$session->setIsUserEnabled($userEnabled);		
 
-			if ($this->_state != NULL) {
-				// OpenOTP Challenge
-				$resp = $this->openotpAuth->openOTPChallenge($this->_username, $this->_domain, $this->_state, $this->_password, $this->_u2f);				
-			} else {
-				// OpenOTP Login
-				$resp = $this->openotpAuth->openOTPSimpleLogin($this->_username, $this->_domain, utf8_encode($this->_password), $remote_addr, $context);
-			}
-			// Debug OpenOTP Response
-			$this->_log("[OpenOTP Module] OpenOTP SOAP Response:");
-			$this->_log($resp);
-			
-			if (!$resp || !isset($resp['code'])) {
-				$this->_log('Invalid OpenOTP response for user '.$this->_username);
-				self::throwException(__('An error occurred while processing your request. Please contact administrator'));	
-				return false;
-			}
+		//If deactivated do normal Auth
+		if ( ( ( !$config->isEnabled() && $userEnabled != 1 ) || ( $config->isEnabled() && $userEnabled == 2 ) || $this->_disableOpenOTP )  && $this->_userMagentoExist ){
+			$this->_log('User '.$this->_username.' tries login with Magento methods');
+			return parent::login($this->_username, $this->_password, $request);
+		}
 
-			switch ($resp['code']) {
-				 case 0:
-					if ($resp['message']) $msg = $resp['message'];
-					else $msg = 'An error occurred while processing your request';
-					
-					self::throwException(__($msg));	
-					break;
-				 case 1:
-					$this->_log("[OpenOTP Module] User ".$this->_username." successfully authenticate to OpenOTP Server ");
-					$session->setShowOpenOTPChallenge(false);	
-					$session->setOpenOTPSuccess(true);	
+		if ($this->_state != NULL) {
+			// OpenOTP Challenge
+			$resp = $this->openotpAuth->openOTPChallenge($this->_username, $this->_domain, $this->_state, $this->_password, $this->_u2f);				
+		} else {
+			// OpenOTP Login
+			$resp = $this->openotpAuth->openOTPSimpleLogin($this->_username, $this->_domain, utf8_encode($this->_password), $remote_addr, $context);
+		}
+		// Debug OpenOTP Response
+		$this->_log("[OpenOTP Module] OpenOTP SOAP Response:");
+		$this->_log($resp);
+		
+		if (!$resp || !isset($resp['code'])) {
+			$this->_log('Invalid OpenOTP response for user '.$this->_username);
+			self::throwException(__('An error occurred while processing your request. Please contact administrator'));	
+			return false;
+		}
 
-					try {
-						// **********************  Create User Account  **********************
-						if (!$this->_userMagentoExist){
-							if(	$config->getCreateAccount()	){
-								$user = $this->_userUserFactory->create()
-									->setData(array(
-										'username'  => $this->_username,
-										'firstname'  => 'FirstName',
-										'lastname'  => $this->_username,
-										'email'  => $this->_username."@openotp.com",
-										'password'  => $password."OpenOTP007",
-										'openotp_enabled'  => 1,
-										'is_active' => 1
-									))->save();
-								$this->_log("[OpenOTP Module] User succesfully created on Magento");
-								$this->_messageManager->addSuccess( __('User succesfully created on Magento') );
-								$user->setRoleId(array(1))
-									->save();
-							}
+		switch ($resp['code']) {
+			 case 0:
+				if ($resp['message']) $msg = $resp['message'];
+				else $msg = 'An error occurred while processing your request';
+				
+				self::throwException(__($msg));	
+				break;
+			 case 1:
+				$this->_log("[OpenOTP Module] User ".$this->_username." successfully authenticate to OpenOTP Server ");
+				$session->setShowOpenOTPChallenge(false);	
+				$session->setOpenOTPSuccess(true);	
+
+				try {
+					// **********************  Create User Account  **********************
+					if (!$this->_userMagentoExist){
+						if(	$config->getCreateAccount()	){
+							$user = $this->_userUserFactory->create()
+								->setData(array(
+									'username'  => $this->_username,
+									'firstname'  => 'FirstName',
+									'lastname'  => $this->_username,
+									'email'  => $this->_username."@openotp.com",
+									'password'  => $password."OpenOTP007",
+									'openotp_enabled'  => 1,
+									'is_active' => 1
+								))->save();
+							$this->_log("[OpenOTP Module] User succesfully created on Magento");
+							$this->_messageManager->addSuccess( __('User succesfully created on Magento') );
+							$user->setRoleId(array(1))
+								->save();
 						}
-						
-						// **********************  Process Magento Login  **********************
-					    $request->setPathInfo('/admin');
-					    
-						$session->setUser($user);
-					    $session->processLogin();
-
-					    if ($session->isLoggedIn()) {
-					        $cookieValue = $session->getSessionId();
-					        if ($cookieValue) {
-								if(class_exists('Magento\Security\Model\AdminSessionsManager')){
-					                $adminSessionManager = $this->_objectManager->get('Magento\Security\Model\AdminSessionsManager'); 
-					                $adminSessionManager->processLogin(); 
-								}
-					        }
-							
-							// **********************  Create context cookie  **********************
-							if (extension_loaded('openssl')) {			
-								$this->_log("[OpenOTP Module] Openssl extension is loaded ");
-								if (strlen($context) != $context_size) $context = bin2hex(openssl_random_pseudo_bytes($context_size/2));
-								$duration = time()+$context_time;
-							
-								$this->_log("[OpenOTP Module] Create Context Cookie ");
-								$this->_log("[OpenOTP Module] Cookie Name: " . $context_name);
-								$this->_log("[OpenOTP Module] Cookie Value: " . $context);
-								$this->_log("[OpenOTP Module] Cookie Duration: " . $duration);
-							
-								$metadata = $this->_cookieMetadataFactory
-						            ->createPublicCookieMetadata()
-						            ->setDuration($duration)
-						            ->setPath("/")
-						            ->setDomain(NULL)
-								//***********************************************************************************************
-								//******************************* TODO: COOKIE SSL ONLY OR NOT **********************************
-								//***********************************************************************************************
-			                        ->setSecure(false)
-			                        ->setHttpOnly(true);								
-
-						        $this->_cookieManager->setPublicCookie(
-						            $context_name,
-						            $context,
-						            $metadata
-									); 
-								
-								$this->_log("[OpenOTP Module] Context Cookie successfully created");
-							} else	$this->_log("[OpenOTP Module] Openssl extension is not loaded: Impossible to create Context Cookie, trusted Authentication not available(see Docs).");							
-							
-							$this->_eventManager->dispatch('admin_session_user_login_success', array('user' => $user));
-							$this->_log("[OpenOTP Module] User " .$this->_username. " successfully authenticate to Magento2 Admin Portal");
-							$this->_log("[OpenOTP Module] URL to Redirect: " . $redirectURL);
-					        header('Location:  '.$redirectURL);						
-							return;
-						}
-						
-					} catch (\Exception $e) {
-							$this->error($e->getMessage());
-							return false;
 					}
-					break;
-				 case 2:
-					$session->setShowOpenOTPChallenge(true);
-					$js = $this->openotpAuth->getOverlay( $resp['otpChallenge'], $resp['u2fChallenge'], $resp['message'], $this->_username, $resp['session'], $resp['timeout'], $this->_password, $this->_domain);
-					$session->setOpenotpFrontendScript($js);		
 					
-					$this->_log("[OpenOTP Module] Challenge required ");
-					header('Location:  '.$redirectURL);	
+					// **********************  Process Magento Login  **********************
+				    $request->setPathInfo('/admin');
+				    
+					$session->setUser($user);
+				    $session->processLogin();
+
+				    if ($session->isLoggedIn()) {
+				        $cookieValue = $session->getSessionId();
+				        if ($cookieValue) {
+							if(class_exists('Magento\Security\Model\AdminSessionsManager')){
+				                $adminSessionManager = $this->_objectManager->get('Magento\Security\Model\AdminSessionsManager'); 
+				                $adminSessionManager->processLogin(); 
+							}
+				        }
+						
+						// **********************  Create context cookie  **********************
+						if (extension_loaded('openssl')) {			
+							$this->_log("[OpenOTP Module] Openssl extension is loaded ");
+							if (strlen($context) != $context_size) $context = bin2hex(openssl_random_pseudo_bytes($context_size/2));
+							$duration = time()+$context_time;
+						
+							$this->_log("[OpenOTP Module] Create Context Cookie ");
+							$this->_log("[OpenOTP Module] Cookie Name: " . $context_name);
+							$this->_log("[OpenOTP Module] Cookie Value: " . $context);
+							$this->_log("[OpenOTP Module] Cookie Duration: " . $duration);
+						
+							$metadata = $this->_cookieMetadataFactory
+					            ->createPublicCookieMetadata()
+					            ->setDuration($duration)
+					            ->setPath("/")
+					            ->setDomain(NULL)
+							//***********************************************************************************************
+							//******************************* TODO: COOKIE SSL ONLY OR NOT **********************************
+							//***********************************************************************************************
+		                        ->setSecure(false)
+		                        ->setHttpOnly(true);								
+
+					        $this->_cookieManager->setPublicCookie(
+					            $context_name,
+					            $context,
+					            $metadata
+								); 
 							
-					return false;	
-					break;
-				 default:
-					$session->setShowOpenOTPChallenge(false);			 				 
-					$this->_log('Invalid OpenOTP response for user '.$this->_username, JLog::ERROR, $remote_addr);
-					self::throwException(__('An error occurred while processing your request. Please contact administrator'));	
-					break;
-			}
-			
-        }catch (\Exception $e) {
-            $this->_eventManager->dispatch('admin_session_user_login_failed',
-				array('user_name' => $username, 'exception' => $e));
-            if ($request && !$request->getParam('messageSent')) {
-				$this->_messageManager->addError( __("DiVA".$e->getMessage()) );
-                $request->setParam('messageSent', true);
-            }
-        }
+							$this->_log("[OpenOTP Module] Context Cookie successfully created");
+						} else	$this->_log("[OpenOTP Module] Openssl extension is not loaded: Impossible to create Context Cookie, trusted Authentication not available(see Docs).");							
+						
+						$this->_eventManager->dispatch('admin_session_user_login_success', array('user' => $user));
+						$this->_log("[OpenOTP Module] User " .$this->_username. " successfully authenticate to Magento2 Admin Portal");
+						$this->_log("[OpenOTP Module] URL to Redirect: " . $redirectURL);
+				        header('Location:  '.$redirectURL);						
+						return;
+					}
+					
+				} catch (\Exception $e) {
+						$this->error($e->getMessage());
+						return false;
+				}
+				break;
+			 case 2:
+				$session->setShowOpenOTPChallenge(true);
+				$js = $this->openotpAuth->getOverlay( $resp['otpChallenge'], $resp['u2fChallenge'], $resp['message'], $this->_username, $resp['session'], $resp['timeout'], $this->_password, $this->_domain);
+				$session->setOpenotpFrontendScript($js);		
+				
+				$this->_log("[OpenOTP Module] Challenge required ");
+				header('Location:  '.$redirectURL);	
+						
+				return false;	
+				break;
+			 default:
+				$session->setShowOpenOTPChallenge(false);			 				 
+				$this->_log('Invalid OpenOTP response for user '.$this->_username, JLog::ERROR, $remote_addr);
+				self::throwException(__('An error occurred while processing your request. Please contact administrator'));	
+				break;
+		}
 
         return $user;
     }
